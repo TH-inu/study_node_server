@@ -13,10 +13,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // mysql 선언
 var conn = mysql.createConnection({
-    host : '3.36.243.240',
-    user : 'test',
-    password : 'test',
-    database : 'test'
+    host : '',
+    user : '',
+    password : '',
+    database : ''
 });
 conn.connect();
 
