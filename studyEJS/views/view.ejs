@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <%-include('./part/header.ejs') %>
+    </head>
+    <body>
+        <div><canvas id="myChart"></canvas></div>
+        <script>
+            var ctx = document.getElementById('myChart').getContext("2d");
+            // 데이터 불러오기
+            var xlabels = JSON.parse('<%- JSON.stringify(xlabels) %>');
+            var ylabels = JSON.parse('<%- JSON.stringify(ylabels) %>');
+
+            var config = {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Temp', // Name the series
+                    data: ylabels, // Specify the data values array
+                    borderColor: '#FF0000', // Add custom color border            
+                    backgroundColor: '#FF0000', // Add custom color background (Points and Fill)
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        type: 'category',
+                        labels: xlabels
+                    }
+                },
+                onHover: function() {
+                    $('myChart').css("cursor", "crosshair");
+                },
+                annotation: {
+                    annotations: [
+                        {
+                            type: 'line',
+                            mode: 'horizontal',
+                            scaleID: 'y-axis-0',
+                            value: 25,
+                            draggable: true,
+                            onDrag: function(event) {
+                                console.log(event.subject.config.value);
+                            }
+                        }
+                    ]
+                }
+            }
+            };
+            
+            var myChart = new Chart(
+                ctx,
+                config
+            );
+        </script>
+    </body>
+</html>

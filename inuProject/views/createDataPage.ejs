@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Create Data Page</title>
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <script type="text/javascript">
+            function setValueSelectById(id, value) {
+                $('#'+id).append('<option value="'+String(value)+'">'+String(value)+'</option>');
+            }
+
+            function selectDate() {
+                $.ajax({
+                    url : "/createSampleData",
+                    type : "POST",
+                    data: JSON.stringify({ 
+                        startDate: $("#selectStartDate").val(),
+                        startTime: $("#selectStartTime").val(),
+                        endDate: $("#selectEndDate").val(),
+                        endTime: $("#selectEndTime").val()
+                    }),
+                    contentType: "application/json; charset=utf-8",
+                })
+
+                .done(function (json){
+                    console.log(json);
+                    $('div').text(json);
+                })
+
+                .fail(function (xhr, status, errorThrown){
+                    alert("Date Select Failed");
+                    console.log(status);
+                });
+            }
+            $(function() {
+                $("#dateSelectBtn").on("click", selectDate);
+            });
+        </script>
+    </head>
+    <body>
+        <h1>Select Date and Time</h1>
+        
+        <div>
+            Start Time:
+            <input id="selectStartDate" type="date">
+            <select id="selectStartTime" size="1"></select>
+            <br>
+            End Time:
+            <input id="selectEndDate" type="date">
+            <select id="selectEndTime" size="1"></select>
+            <button id="dateSelectBtn">기간 선택</button>
+        </div>
+
+        <script>
+           for (i = 0; i < 24; i++) {
+                setValueSelectById('selectStartTime', i);
+                setValueSelectById('selectEndTime', i);                
+            }
+            var now = new Date().toISOString().split('T')[0];
+            console.log(now);
+            $("#selectStartDate").attr('value', now);
+            $("#selectEndDate").attr('value', now);
+        </script>
+    </body>
+</html>

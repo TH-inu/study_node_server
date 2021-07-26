@@ -1,0 +1,54 @@
+    <script src="http://code.jquery.com/jquery-latest.js"></script> 
+    <script>
+        // node에서 제일 처음 날짜와 마지막 날짜 넘겨줌
+        var minDate = JSON.parse("<%= JSON.stringify(minDate) %>");
+        var maxDate = JSON.parse("<%= JSON.stringify(maxDate) %>");
+
+        for (var j in {'First':0, 'Last':1}) {
+            // 년도 추가
+            idx = 0
+            for (var i=minDate[0]; i<=maxDate[0]; i++) {
+                $('#select'+j+'Year').append('<option value="'+String(i)+'">'+String(i)+'</option>');
+            }
+            // 월 추가
+            for (var i=1; i<=12; i++) {
+                $('#select'+j+'Month').append('<option value="'+String(i)+'">'+String(i)+'</option>');
+            }
+            // 시간 추가
+            for (var i=0; i<=23; i++) {
+                $('#select'+j+'Hour').append('<option value="'+String(i)+'">'+String(i)+'</option>');
+            }
+            // 분, 초 추가
+            for (var i=0; i<=59; i++) {
+                $('#select'+j+'Minute').append('<option value="'+String(i)+'">'+String(i)+'</option>');
+                $('#select'+j+'Second').append('<option value="'+String(i)+'">'+String(i)+'</option>');
+            }
+
+            calculateLastDay(j);
+        }
+        
+        // lastDate의 기본값 설정
+        for (var i in {'Year':0, 'Month':1, "Day":2, "Hour":3, "Minute":4, "Second":5}) {
+            $("#selectLast"+i+" option:last").prop("selected", true);
+            $("#selectFirst"+i+" option:first").prop("selected", true);
+        }
+
+        function calculateLastDay(name){ //년과 월에 따라 마지막 일 구하기 
+            var year=$("#select"+name+"Year option:selected").val();
+            var month=$("#select"+name+"Month option:selected").val();
+
+            var day = new Date(year, month, 0).getDate()  // ex) 2019-03-11 ==> Date(2019, 3, 0) ==> 2019년 4월 0일 ==> 3월 마지막 일
+            var dayLength = $("#select"+name+"Day option").size();
+
+            // 기존의 day길이가 짧으면 날짜 추가 기존의 day길이가 길면 날짜 삭제
+            if (day > dayLength) { 
+                for(var i=(dayLength+1); i<=day; i++){ 
+                    $("#select"+name+"Day").append('<option value="'+String(i)+'">'+String(i)+'</option>');
+                } 
+            } else if (day < dayLength) { 
+                for(var i=dayLength; i>day; i--){ 
+                    $("#select"+name+"Day option:last").remove();
+                } 
+            }
+        }
+    </script>

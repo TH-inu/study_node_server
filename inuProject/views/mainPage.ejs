@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>main page</title>
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <script type="text/javascript">
+            function initSelectDateOption(min, max) {
+                $("#selectStartDate").attr('min', min);
+                $("#selectStartDate").attr('max', max);
+                $("#selectStartDate").attr('value', min);
+                $("#selectEndDate").attr('min', min);
+                $("#selectEndDate").attr('max', max);
+                $("#selectEndDate").attr('value', max);
+            }
+            
+            function selectDate() {
+                $.ajax({
+                    url : "/mainPage/dateSelect",
+                    type : "POST",
+                    data: JSON.stringify({ 
+                        startDate: $("#selectStartDate").val(),
+                        endDate: $("#selectEndDate").val()
+                    }),
+                    contentType: "application/json; charset=utf-8",
+                })
+
+                .done(function (json){
+                    console.log(json);
+                    $('#sumPeople').text(json['sum(people)']);
+                    $('#sumVehicle').text(json['sum(vehicle)']);
+                })
+
+                .fail(function (xhr, status, errorThrown){
+                    alert("Date Select Failed");
+                    console.log(status);
+                });
+            }
+            $(function() {
+                $("#dateSelectBtn").on("click", selectDate);
+            });
+
+            function refreshData() {
+                $.ajax({
+                    url : "/mainPage/refreshData",
+                    type : "POST",
+                    dataType : "JSON",
+                })
+
+                .done(function (json){
+                    console.log(json);
+                    // $('td[name=startDate]').eq('0').text(json.start_date);
+                    // $('td[name=endDate]').eq('0').text(json.start_date);
+                    // $('td[name=peopleNum]').eq('0').text(json.start_date);
+                    // $('td[name=vehicleNum]').eq('0').text(json.start_date);
+                    $('#startDate').text(json.end_date);
+                    $('#endDate').text(json.end_date);
+                    $('#peopleNum').text(json.people);
+                    $('#vehicleNum').text(json.vehicle);
+                })
+
+                .fail(function (xhr, status, errorThrown){
+                    alert("Refresh Data Failed");
+                });
+            }
+            $(function() {
+                $("#refreshDataBtn").on("click", refreshData);
+            });
+        </script>
+    </head>
+    <body>
+        <h1>show data</h1>
+        <button id="refreshDataBtn">데이터 새로고침</button>
+
+        <table id="showLatestTable" border="1">
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>People</th>
+            <th>Vehicle</th>
+            <tr>
+                <td id="startDate"></td>
+                <td id="endDate"></td>
+                <td id="peopleNum"></td>
+                <td id="vehicleNum"></td>
+            </tr>
+        </table>
+        <div>
+            <input id="selectStartDate" type="date">
+            <input id="selectEndDate" type="date">
+            <button id="dateSelectBtn">기간 선택</button>
+        </div>
+        <table id="showTermTable" border="1">
+            <th></th>
+            <th>People</th>
+            <th>Vehicle</th>
+            <tr>
+                <th>Sum</th>
+                <td id="sumPeople"></td>
+                <td id="sumVehicle"></td>
+            </tr>
+        </table>
+
+        <script>
+            var data = JSON.parse('<%- JSON.stringify(data) %>');
+            var minDate = data['min(start_date)'].split(' ')[0];
+            var maxDate = data['max(end_date)'].split(' ')[0];
+            initSelectDateOption(minDate, maxDate);
+            refreshData();
+            selectDate();
+        </script>
+    </body>
+</html>

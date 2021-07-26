@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <%-include('./part/header.ejs') %>
+    </head>
+    <body>
+        <div id="chartContainer"></div>
+        <script>
+            //var ctx = document.getElementById('myChart').getContext("2d");
+            // 데이터 불러오기
+            var xlabels = JSON.parse('<%- JSON.stringify(xlabels) %>');
+            var ylabels = JSON.parse('<%- JSON.stringify(ylabels) %>');
+            console.log(xlabels);
+            console.log(ylabels);
+            var date = [];
+            for (i = 0; i < xlabels.length; i++) {
+                xDate = new Date(xlabels[i].getFullYear, xlabels[i].getMonth, xlabels[i].getDate)
+                date.push({x : xDate, y : ylabels[i]});
+            }
+            console.log(xDate);
+
+            var chart = new CanvasJS.Chart("chartContainer", {
+                animationEnabled: true,
+                zoomEnabled: true,
+                title:{
+                    text: "Real Estate Rates"
+                },
+                data: [{
+                    type: "scatter",
+                    toolTipContent: "<b>Area: </b>{x} sq.ft<br/><b>Price: </b>${y}k",
+                    data: date
+                }]
+            });
+            chart.render();
+            console.log("done");
+        </script>
+    </body>
+</html>

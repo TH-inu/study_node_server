@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>option</title>
+    </head>
+    <body>
+        <h1>select date page</h1>
+        <h2>first date ~ last date</h2>
+        <form action="/option" method="post">
+            Date: 
+            <select id="selectFirstYear" name="firstYear" size="1" onchange="calculateLastDay('First')"></select>
+            - <select id="selectFirstMonth" name="firstMonth" size="1" onchange="calculateLastDay('First')"></select>
+            - <select id="selectFirstDay" name="firstDay" size="1"></select>
+            <select id="selectFirstHour" name="firstHour" size="1"></select>
+            : <select id="selectFirstMinute" name="firstMinute" size="1"></select>
+            : <select id="selectFirstSecond" name="firstSecond" size="1"></select>
+            ~ 
+            <select id="selectLastYear" name="lastYear" size="1" onchange="calculateLastDay('Last')"></select>
+            - <select id="selectLastMonth" name="lastMonth" size="1" onchange="calculateLastDay('Last')"></select>
+            - <select id="selectLastDay" name="lastDay" size="1"></select>
+            <select id="selectLastHour" name="lastHour" size="1"></select>
+            : <select id="selectLastMinute" name="lastMinute" size="1"></select>
+            : <select id="selectLastSecond" name="lastSecond" size="1"></select>
+
+            <input value="입력" type="submit"/>
+        </form>
+        <%- include('./part/setSelectOption.ejs') %>
+    </body>
+</html>
